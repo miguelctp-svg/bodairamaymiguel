@@ -458,7 +458,8 @@
             const mensaje = document.getElementById('mensaje').value;
 
             const text = `¡Hola! Soy *${nombre}*.\nConfirmación para la Boda de Irama & Miguel:\n- *Asistencia:* ${asistencia}\n- *Mensaje:* ${mensaje || "Sin mensaje"}`;
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            const phone = "584121052752";
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank');
         });
 
