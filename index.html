@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boda Irama & Miguel | Invitación Especial</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for Audio Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            light: '#F8E8A6',
+                            DEFAULT: '#D4AF37',
+                            dark: '#B8860B',
+                        },
+                        olive: {
+                            light: '#708238',
+                            DEFAULT: '#556B2F',
+                            dark: '#35451B',
+                            deep: '#232D12'
+                        },
+                        cream: '#F9F8F3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                        cursive: ['"Great Vibes"', 'cursive'],
+                    },
+                    animation: {
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+                            '50%': { opacity: '1', transform: 'scale(1.05)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F9F8F3;
+            color: #35451B;
+            overflow-x: hidden;
+        }
+
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #F8E8A6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 10px 30px rgba(53, 69, 27, 0.08);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F8F3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #556B2F;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-olive selection:text-white">
+
+    <!-- Canvas de Pétalos Flotantes -->
+    <canvas id="petals-canvas"></canvas>
+
+    <!-- Botón Flotante de Música -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2">
+        <button id="music-btn" class="bg-olive-dark text-gold-light border border-gold/50 shadow-xl p-3.5 rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center group" title="Reproducir / Pausar Música">
+            <i id="music-icon" class="fas fa-music text-xl group-hover:rotate-12 transition-transform"></i>
+        </button>
+    </div>
+
+    <!-- HERO / PORTADA -->
+    <section class="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden py-16">
+        <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#556B2F_1.5px,transparent_1.5px)] [background-size:28px_28px]"></div>
+        
+        <div class="relative z-10 max-w-3xl mx-auto space-y-6 reveal active">
+            <div class="inline-block px-6 py-2 rounded-full border border-gold/60 bg-olive-dark text-gold-light backdrop-blur-sm text-sm tracking-[0.25em] font-medium uppercase mb-2 shadow-md">
+                ¡Nos Casamos!
+            </div>
+
+            <h1 class="font-cursive text-6xl sm:text-7xl md:text-8xl text-gold-gradient py-2 drop-shadow">
+                Irama & Miguel
+            </h1>
+
+            <p class="font-serif italic text-xl sm:text-2xl text-olive-dark max-w-xl mx-auto leading-relaxed">
+                "El amor no contempla con los ojos, sino con el alma."
+            </p>
+
+            <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto my-6"></div>
+
+            <p class="font-serif text-2xl sm:text-3xl text-olive-dark tracking-wide uppercase font-light">
+                18 de Diciembre de 2026
+            </p>
+
+            <!-- CUENTA REGRESIVA -->
+            <div class="pt-6">
+                <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-md mx-auto">
+                    <div class="glass-card p-3 sm:p-4 rounded-2xl text-center border-gold/40">
+                        <span id="days" class="block font-serif text-3xl sm:text-4xl font-bold text-olive-dark">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-olive-dark font-medium">Días</span>
+                    </div>
+                    <div class="glass-card p-3 sm:p-4 rounded-2xl text-center border-gold/40">
+                        <span id="hours" class="block font-serif text-3xl sm:text-4xl font-bold text-olive-dark">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-olive-dark font-medium">Horas</span>
+                    </div>
+                    <div class="glass-card p-3 sm:p-4 rounded-2xl text-center border-gold/40">
+                        <span id="minutes" class="block font-serif text-3xl sm:text-4xl font-bold text-olive-dark">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-olive-dark font-medium">Min</span>
+                    </div>
+                    <div class="glass-card p-3 sm:p-4 rounded-2xl text-center border-gold/40">
+                        <span id="seconds" class="block font-serif text-3xl sm:text-4xl font-bold text-olive-dark">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-olive-dark font-medium">Seg</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-10 animate-float-slow">
+                <a href="#nuestra-historia" class="inline-flex flex-col items-center text-olive hover:text-gold-dark transition-colors">
+                    <span class="text-xs tracking-widest uppercase mb-2">Ver detalles</span>
+                    <i class="fas fa-chevron-down text-lg text-gold"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MENSAJE / HISTORIA -->
+    <section id="nuestra-historia" class="py-20 px-4 max-w-4xl mx-auto">
+        <div class="glass-card p-8 sm:p-12 rounded-3xl text-center relative overflow-hidden reveal border-gold/50">
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-gold rounded-tl-3xl m-3"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-gold rounded-br-3xl m-3"></div>
+
+            <i class="fas fa-leaf text-olive text-3xl mb-4"></i>
+
+            <h2 class="font-serif text-3xl sm:text-4xl text-olive-dark font-bold mb-6">
+                Un Camino Juntos
+            </h2>
+
+            <p class="font-serif text-lg sm:text-xl text-olive-dark/90 leading-relaxed max-w-2xl mx-auto">
+                Hay momentos en la vida que son incomparables, pero compartirlos con quienes más queremos los vuelve inolvidables. Nos encantaría que nos acompañes a celebrar el comienzo de esta gran historia de amor.
+            </p>
+
+            <div class="mt-8 flex justify-center gap-4 text-gold">
+                <span class="h-px w-12 bg-gold/60 self-center"></span>
+                <span class="font-cursive text-3xl text-gold-dark">I & M</span>
+                <span class="h-px w-12 bg-gold/60 self-center"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ITINERARIO -->
+    <section class="py-20 px-4 bg-olive-dark/5 relative">
+        <div class="max-w-4xl mx-auto text-center mb-16 reveal">
+            <span class="text-xs tracking-[0.3em] uppercase text-gold-dark font-semibold">El programa</span>
+            <h2 class="font-serif text-4xl text-olive-dark font-bold mt-2">Itinerario de la Boda</h2>
+            <div class="w-16 h-0.5 bg-gold mx-auto mt-4"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto relative before:absolute before:inset-0 before:left-1/2 before:-ml-px before:w-0.5 before:bg-gold/50">
+            <!-- Evento 1 -->
+            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group mb-12 reveal">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gold bg-olive-dark text-gold-light shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                    <i class="fas fa-church text-lg"></i>
+                </div>
+                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6 rounded-2xl shadow-sm">
+                    <span class="font-serif font-bold text-gold-dark text-xl block">4:30 PM</span>
+                    <h3 class="font-serif text-xl font-semibold text-olive-dark">Ceremonia Religiosa</h3>
+                    <p class="text-sm text-olive-dark/80 mt-1">Parroquia Nuestra Señora de Lourdes. Entrada de novios e invitados, bendición nupcial y fotos.</p>
+                </div>
+            </div>
+
+            <!-- Evento 2 -->
+            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group mb-12 reveal">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gold bg-olive-dark text-gold-light shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                    <i class="fas fa-cocktail text-lg"></i>
+                </div>
+                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6 rounded-2xl shadow-sm">
+                    <span class="font-serif font-bold text-gold-dark text-xl block">7:00 PM</span>
+                    <h3 class="font-serif text-xl font-semibold text-olive-dark">Cocktail de Bienvenida</h3>
+                    <p class="text-sm text-olive-dark/80 mt-1">Horus Restaurant. Llegada de invitados al salón, aperitivos, bebidas y música ambiental.</p>
+                </div>
+            </div>
+
+            <!-- Evento 3 -->
+            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group mb-12 reveal">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gold bg-olive-dark text-gold-light shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                    <i class="fas fa-glass-cheers text-lg"></i>
+                </div>
+                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6 rounded-2xl shadow-sm">
+                    <span class="font-serif font-bold text-gold-dark text-xl block">8:30 PM</span>
+                    <h3 class="font-serif text-xl font-semibold text-olive-dark">Entrada de Novios & Recepción</h3>
+                    <p class="text-sm text-olive-dark/80 mt-1">Horus Restaurant. Recibimiento especial de los recién casados, brindis principal y cena.</p>
+                </div>
+            </div>
+
+            <!-- Evento 4 -->
+            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gold bg-olive-dark text-gold-light shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                    <i class="fas fa-music text-lg"></i>
+                </div>
+                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6 rounded-2xl shadow-sm">
+                    <span class="font-serif font-bold text-gold-dark text-xl block">10:30 PM</span>
+                    <h3 class="font-serif text-xl font-semibold text-olive-dark">¡Fiesta & Pista de Baile!</h3>
+                    <p class="text-sm text-olive-dark/80 mt-1">Apertura de la pista de baile, música en vivo y celebración especial.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UBICACIONES -->
+    <section class="py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <span class="text-xs tracking-[0.3em] uppercase text-gold-dark font-semibold">¿Dónde & Cuándo?</span>
+            <h2 class="font-serif text-4xl text-olive-dark font-bold mt-2">Ubicación del Evento</h2>
+            <div class="w-16 h-0.5 bg-gold mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Tarjeta Ceremonia -->
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4 hover:shadow-xl transition-all reveal border-gold/40">
+                <div class="w-16 h-16 bg-olive-dark text-gold-light rounded-full flex items-center justify-center mx-auto text-2xl border border-gold/50 shadow-md">
+                    <i class="fas fa-church"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-olive-dark">Ceremonia</h3>
+                <p class="text-gold-dark font-semibold">Parroquia Nuestra Señora de Lourdes</p>
+                <p class="text-xs text-olive font-medium">Hora: 4:30 PM</p>
+                <div class="pt-4">
+                    <a href="https://maps.google.com/?cid=2817528051206489943" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-olive-dark text-olive-dark hover:bg-olive-dark hover:text-white transition-all text-sm font-medium">
+                        <i class="fas fa-map-marker-alt text-gold-dark"></i> Ver Ubicación en Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta Recepción -->
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4 hover:shadow-xl transition-all reveal border-gold/40">
+                <div class="w-16 h-16 bg-olive-dark text-gold-light rounded-full flex items-center justify-center mx-auto text-2xl border border-gold/50 shadow-md">
+                    <i class="fas fa-glass-cheers"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-olive-dark">Recepción & Fiesta</h3>
+                <p class="text-gold-dark font-semibold">Horus Restaurant</p>
+                <p class="text-xs text-olive font-medium">Hora: 8:30 PM</p>
+                <div class="pt-4">
+                    <a href="https://maps.app.goo.gl/gPG3nyyeEXW4Qb4J6" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-olive-dark text-olive-dark hover:bg-olive-dark hover:text-white transition-all text-sm font-medium">
+                        <i class="fas fa-map-marker-alt text-gold-dark"></i> Ver Ubicación en Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VESTIMENTA Y REGALOS -->
+    <section class="py-20 px-4 bg-olive-dark/5">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4 reveal border-gold/40">
+                <div class="w-14 h-14 bg-olive-dark text-gold-light rounded-full flex items-center justify-center mx-auto text-2xl border border-gold/50 shadow-md">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-olive-dark">Código de Vestimenta</h3>
+                <p class="text-gold-dark font-semibold text-lg">Rigurosa Etiqueta / Formal</p>
+                <p class="text-sm text-olive-dark/80 max-w-sm mx-auto leading-relaxed">
+                    Traje formal para caballeros y vestido largo para damas.
+                </p>
+                <span class="inline-block text-xs bg-olive-dark text-gold-light px-4 py-1.5 rounded-full mt-2 font-medium shadow-sm border border-gold/30">
+                    Reservado el color blanco para la novia 🤍
+                </span>
+            </div>
+
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4 reveal border-gold/40">
+                <div class="w-14 h-14 bg-olive-dark text-gold-light rounded-full flex items-center justify-center mx-auto text-2xl border border-gold/50 shadow-md">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-olive-dark">Mesa de Regalos</h3>
+                <p class="text-sm text-olive-dark/80 max-w-sm mx-auto leading-relaxed">
+                    Tu presencia es nuestro mejor regalo. Si deseas hacernos un obsequio, ponemos a tu disposición nuestros datos bancarios.
+                </p>
+                <button onclick="toggleModal('modal-regalos')" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-olive-dark text-gold-light hover:bg-olive transition-all text-sm font-medium shadow-md border border-gold/40">
+                    <i class="fas fa-credit-card text-gold"></i> Datos Bancarios / Regalos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULARIO RSVP -->
+    <section class="py-20 px-4 max-w-3xl mx-auto">
+        <div class="glass-card p-8 sm:p-12 rounded-3xl reveal border-gold/50 shadow-xl">
+            <div class="text-center mb-8">
+                <i class="fas fa-envelope-open-text text-3xl text-gold mb-3"></i>
+                <h2 class="font-serif text-3xl sm:text-4xl text-olive-dark font-bold">Confirmación de Asistencia</h2>
+                <p class="text-sm text-olive-dark/80 mt-2">Por favor confirma tu asistencia antes del <strong>25 de Noviembre de 2026</strong>.</p>
+            </div>
+
+            <form id="rsvpForm" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-olive-dark mb-2">Nombre y Apellido</label>
+                    <input type="text" id="nombre" required placeholder="Tu nombre completo" class="w-full px-4 py-3 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold bg-white/80 text-olive-dark">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-olive-dark mb-2">¿Nos acompañarás?</label>
+                    <select id="asistencia" required class="w-full px-4 py-3 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold bg-white/80 text-olive-dark">
+                        <option value="Sí, asistiré con mucho gusto">¡Sí, ahí estaré con mucho gusto!</option>
+                        <option value="Lamentablemente no podré asistir">Lamentablemente no podré asistir</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-olive-dark mb-2">Mensaje especial para los novios</label>
+                    <textarea id="mensaje" rows="3" placeholder="Déjanos tus buenos deseos..." class="w-full px-4 py-3 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold bg-white/80 text-olive-dark"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-olive-dark text-gold-light font-semibold hover:bg-olive transition-all text-base shadow-lg border border-gold/40 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp text-xl text-green-400"></i> Confirmar por WhatsApp
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="py-12 text-center text-olive-dark/70 text-sm border-t border-gold/20">
+        <p class="font-cursive text-3xl text-gold-dark mb-2">Irama & Miguel</p>
+        <p>18 de Diciembre de 2026</p>
+    </footer>
+
+    <!-- MODAL DATOS BANCARIOS -->
+    <div id="modal-regalos" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl relative border-gold shadow-2xl">
+            <button onclick="toggleModal('modal-regalos')" class="absolute top-4 right-4 text-olive hover:text-gold text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center space-y-4">
+                <div class="w-12 h-12 bg-olive-dark text-gold-light rounded-full flex items-center justify-center mx-auto text-xl">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-olive-dark">Datos Bancarios</h3>
+                <p class="text-xs text-olive-dark/80">Agradecemos profundamente tu detalle con nosotros.</p>
+                
+                <div class="bg-white/80 p-4 rounded-2xl border border-gold/30 text-left space-y-2 text-sm text-olive-dark">
+                    <p><strong>Banco:</strong> Banesco / Pago Móvil</p>
+                    <p><strong>Titular:</strong> Irama & Miguel</p>
+                    <p><strong>C.I. / RIF:</strong> V-00.000.000</p>
+                    <p><strong>Teléfono:</strong> +58 412-0000000</p>
+                    <p><strong>Cuenta:</strong> 0134-0000-00-0000000000</p>
+                </div>
+
+                <button onclick="toggleModal('modal-regalos')" class="w-full py-2.5 rounded-xl bg-olive-dark text-gold-light font-medium hover:bg-olive transition-all text-sm">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        // Animación Reveal al hacer Scroll
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // Control del Modal
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        // Cuenta Regresiva: 18 de Diciembre de 2026 - 4:30 PM
+        const weddingDate = new Date("December 18, 2026 16:30:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Formulario RSVP hacia WhatsApp
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value;
+            const asistencia = document.getElementById('asistencia').value;
+            const mensaje = document.getElementById('mensaje').value;
+
+            const text = `¡Hola! Soy *${nombre}*.\nConfirmación para la Boda de Irama & Miguel:\n- *Asistencia:* ${asistencia}\n- *Mensaje:* ${mensaje || "Sin mensaje"}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Efecto de Pétalos Flotantes
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const petals = Array.from({ length: 25 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 8 + 6,
+            speedY: Math.random() * 1 + 0.5,
+            speedX: Math.random() * 0.6 - 0.3,
+            angle: Math.random() * Math.PI * 2,
+            spin: Math.random() * 0.02 - 0.01,
+            opacity: Math.random() * 0.5 + 0.3
+        }));
+
+        function drawPetals() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(p => {
+                p.y += p.speedY;
+                p.x += Math.sin(p.angle) * 0.5 + p.speedX;
+                p.angle += p.spin;
+
+                if (p.y > height + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * width;
+                }
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.fillStyle = `rgba(212, 175, 55, ${p.opacity})`;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+            requestAnimationFrame(drawPetals);
+        }
+        drawPetals();
+
+        // Síntesis de Audio (All I Want Is You)
+        let isPlaying = false;
+        let synth = null;
+
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+
+        const melody = [
+            { note: "A3", duration: "4n" },
+            { note: "D4", duration: "4n" },
+            { note: "F#4", duration: "2n" },
+            { note: "E4", duration: "2n" },
+            { note: "D4", duration: "2n" },
+            { note: "A3", duration: "4n" },
+            { note: "G3", duration: "4n" },
+            { note: "B3", duration: "2n" },
+            { note: "D4", duration: "2n" }
+        ];
+
+        musicBtn.addEventListener('click', async () => {
+            await Tone.start();
+            if (!isPlaying) {
+                if (!synth) {
+                    synth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "sine" },
+                        envelope: { attack: 0.8, decay: 1.5, sustain: 0.7, release: 2 }
+                    }).toDestination();
+                    synth.volume.value = -12;
+                }
+
+                let step = 0;
+                Tone.Transport.scheduleRepeat((time) => {
+                    const current = melody[step % melody.length];
+                    synth.triggerAttackRelease(current.note, current.duration, time);
+                    step++;
+                }, "2n");
+
+                Tone.Transport.start();
+                isPlaying = true;
+                musicIcon.className = "fas fa-pause text-xl";
+            } else {
+                Tone.Transport.stop();
+                Tone.Transport.cancel();
+                isPlaying = false;
+                musicIcon.className = "fas fa-music text-xl";
+            }
+        });
+    </script>
+</body>
+</html>
